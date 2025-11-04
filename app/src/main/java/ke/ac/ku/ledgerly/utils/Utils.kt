@@ -17,6 +17,11 @@ object Utils {
         return dateFormatter.format(dateInMillis)
     }
 
+    fun formatDateToISO(timestamp: Long): String {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        return sdf.format(java.util.Date(timestamp))
+    }
+
     fun formatDateForChart(dateInMillis: Long): String {
         val dateFormatter = SimpleDateFormat("dd-MMM", Locale.getDefault())
         return dateFormatter.format(dateInMillis)
