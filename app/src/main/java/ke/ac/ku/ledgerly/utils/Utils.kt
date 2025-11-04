@@ -76,8 +76,7 @@ object Utils {
             }
         }
 
-        // Fallback to current time if parsing fails
-        return Date().time
+        throw IllegalArgumentException("Unable to parse date: $dateStr. Expected formats: dd/MM/yyyy, yyyy-MM-dd'T'HH:mm:ss, or yyyy-MM-dd")
     }
 
 
