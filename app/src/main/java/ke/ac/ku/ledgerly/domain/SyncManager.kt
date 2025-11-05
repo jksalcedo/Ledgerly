@@ -48,7 +48,9 @@ class SyncManager @Inject constructor(
         scope.launch {
             try {
                 if (!authRepository.isUserAuthenticated()) {
-                    onError?.invoke("Please sign in to enable cloud sync")
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("Please sign in to enable cloud sync")
+                    }
                     return@launch
                 }
 
@@ -57,7 +59,9 @@ class SyncManager @Inject constructor(
 
                 if (result.isSuccessful) {
                     updateLastSyncTime()
-                    onSuccess?.invoke()
+                    withContext(Dispatchers.Main) {
+                        onSuccess?.invoke()
+                    }
                     Log.d(TAG, "Sync completed successfully")
                 } else {
                     val errorMessage = when {
@@ -67,12 +71,16 @@ class SyncManager @Inject constructor(
                             "Budget sync failed: ${result.budgets.message}"
                         else -> "Sync failed"
                     }
-                    onError?.invoke(errorMessage)
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke(errorMessage)
+                    }
                     Log.e(TAG, errorMessage)
                 }
             } catch (e: Exception) {
                 val errorMsg = "Sync failed: ${e.message}"
-                onError?.invoke(errorMsg)
+                withContext(Dispatchers.Main) {
+                    onError?.invoke(errorMsg)
+                }
                 Log.e(TAG, errorMsg, e)
             }
         }
