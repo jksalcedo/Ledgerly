@@ -203,21 +203,18 @@ fun TransactionListScreen(
             // Floating Action Button
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
                     .constrainAs(fab) {
                         bottom.linkTo(parent.bottom)
                         end.linkTo(parent.end)
                     },
                 contentAlignment = Alignment.BottomEnd
             ) {
-                var expanded by remember { mutableStateOf(false) }
-
                 Column(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    AnimatedVisibility(visible = expanded) {
+                    AnimatedVisibility(visible = fabExpanded) {
                         Column(horizontalAlignment = Alignment.End) {
                             // Add Income
                             Box(
@@ -228,7 +225,7 @@ fun TransactionListScreen(
                                         viewModel.onEvent(
                                             ke.ac.ku.ledgerly.feature.home.HomeUiEvent.OnAddIncomeClicked
                                         )
-                                        expanded = false
+                                        fabExpanded = false
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -250,7 +247,7 @@ fun TransactionListScreen(
                                         viewModel.onEvent(
                                             ke.ac.ku.ledgerly.feature.home.HomeUiEvent.OnAddExpenseClicked
                                         )
-                                        expanded = false
+                                        fabExpanded = false
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -268,7 +265,7 @@ fun TransactionListScreen(
                         modifier = Modifier
                             .size(64.dp)
                             .background(color = Zinc, shape = RoundedCornerShape(16.dp))
-                            .clickable { expanded = !expanded },
+                            .clickable { fabExpanded = !fabExpanded },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
