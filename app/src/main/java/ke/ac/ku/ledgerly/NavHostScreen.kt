@@ -1,7 +1,5 @@
 package ke.ac.ku.ledgerly
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -39,11 +37,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.SignInClient
 import ke.ac.ku.ledgerly.auth.presentation.AuthScreen
+import ke.ac.ku.ledgerly.auth.presentation.AuthViewModel
 import ke.ac.ku.ledgerly.feature.add_transaction.AddTransaction
 import ke.ac.ku.ledgerly.feature.budget.AddBudgetScreen
 import ke.ac.ku.ledgerly.feature.budget.BudgetScreen
 import ke.ac.ku.ledgerly.feature.home.HomeScreen
 import ke.ac.ku.ledgerly.feature.settings.SettingsScreen
+import ke.ac.ku.ledgerly.feature.settings.SettingsViewModel
 import ke.ac.ku.ledgerly.feature.stats.StatsScreen
 import ke.ac.ku.ledgerly.feature.transactionlist.TransactionListScreen
 import ke.ac.ku.ledgerly.ui.components.DrawerContent
@@ -53,11 +53,12 @@ import ke.ac.ku.ledgerly.utils.NavRouts
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavHostScreen(
     oneTapClient: SignInClient,
-    themeViewModel: ThemeViewModel
+    themeViewModel: ThemeViewModel,
+    settingsViewModel: SettingsViewModel,
+    authViewModel: AuthViewModel
 ) {
     val navController = rememberNavController()
     var bottomBarVisibility by remember { mutableStateOf(false) }
@@ -76,7 +77,8 @@ fun NavHostScreen(
                 DrawerContent(
                     navController = navController,
                     themeViewModel = themeViewModel,
-                    onCloseDrawer = { scope.launch { drawerState.close() } }
+                    onCloseDrawer = { scope.launch { drawerState.close() } },
+                    authViewModel = authViewModel
                 )
             }
         }
@@ -153,7 +155,7 @@ fun NavHostScreen(
 
                     composable(NavRouts.settings) {
                         bottomBarVisibility = false
-                        SettingsScreen(navController, themeViewModel)
+                        SettingsScreen(navController, themeViewModel, settingsViewModel)
                     }
                 }
             }
@@ -172,26 +174,13 @@ fun NavHostScreen(
                     },
                     modifier = Modifier
                         .zIndex(10f),
-                CenterAlignedTopAppBar(
-                    title = {},
-                    actions = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_menu),
-                                contentDescription = "Menu"
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .zIndex(10f),
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
                         scrolledContainerColor = Color.Transparent,
                         navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
                         titleContentColor = MaterialTheme.colorScheme.onSurface,
                         actionIconContentColor = MaterialTheme.colorScheme.onSurface
                     )
-                )
                 )
             }
 
