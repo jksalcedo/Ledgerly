@@ -93,14 +93,24 @@ class SyncManager @Inject constructor(
 
     fun setCloudSyncEnabled(enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        
+        if (enabled && !authRepository.isUserAuthenticated()) {
+            Log.w(TAG, "Ignoring cloud sync enable while user is signed out")
+            return
+        }
+
         prefs.edit { putBoolean(KEY_SYNC_ENABLED, enabled) }
 
         if (enabled) {
             syncAllData(
                 onSuccess = { Log.d(TAG, "Manual sync completed") },
-                onError = { e -> Log.e(TAG, "Manual sync failed: $e") }
+                onError = { e ->
+                    prefs.edit { putBoolean(KEY_SYNC_ENABLED, false) }
+                    Log.e(TAG, "Manual sync failed: $e")
+                }
             )
         }
+    }
     }
 
 
