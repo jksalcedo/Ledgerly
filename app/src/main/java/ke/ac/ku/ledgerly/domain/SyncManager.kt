@@ -48,7 +48,9 @@ class SyncManager @Inject constructor(
         scope.launch {
             try {
                 if (!authRepository.isUserAuthenticated()) {
-                    onError?.invoke("Please sign in to enable cloud sync")
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("Please sign in to enable cloud sync")
+                    }
                     return@launch
                 }
 
@@ -57,7 +59,9 @@ class SyncManager @Inject constructor(
 
                 if (result.isSuccessful) {
                     updateLastSyncTime()
-                    onSuccess?.invoke()
+                    withContext(Dispatchers.Main) {
+                        onSuccess?.invoke()
+                    }
                     Log.d(TAG, "Sync completed successfully")
                 } else {
                     val errorMessage = when {
@@ -67,12 +71,16 @@ class SyncManager @Inject constructor(
                             "Budget sync failed: ${result.budgets.message}"
                         else -> "Sync failed"
                     }
-                    onError?.invoke(errorMessage)
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke(errorMessage)
+                    }
                     Log.e(TAG, errorMessage)
                 }
             } catch (e: Exception) {
                 val errorMsg = "Sync failed: ${e.message}"
-                onError?.invoke(errorMsg)
+                withContext(Dispatchers.Main) {
+                    onError?.invoke(errorMsg)
+                }
                 Log.e(TAG, errorMsg, e)
             }
         }
@@ -85,14 +93,24 @@ class SyncManager @Inject constructor(
 
     fun setCloudSyncEnabled(enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        
+        if (enabled && !authRepository.isUserAuthenticated()) {
+            Log.w(TAG, "Ignoring cloud sync enable while user is signed out")
+            return
+        }
+
         prefs.edit { putBoolean(KEY_SYNC_ENABLED, enabled) }
 
         if (enabled) {
             syncAllData(
                 onSuccess = { Log.d(TAG, "Manual sync completed") },
-                onError = { e -> Log.e(TAG, "Manual sync failed: $e") }
+                onError = { e ->
+                    prefs.edit { putBoolean(KEY_SYNC_ENABLED, false) }
+                    Log.e(TAG, "Manual sync failed: $e")
+                }
             )
         }
+    }
     }
 
 
