@@ -24,5 +24,5 @@ This repository contains the Android app source for the SCO 306 — Project 2 as
 - Jetpack Compose (UI)
 - AndroidX libraries
 - Room (local database)
-- Firebase (optional — for cloud sync/auth; not bundled)
+- Firebase
 - Gradle
