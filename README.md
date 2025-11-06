@@ -1,9 +1,7 @@
-<div style="text-align: center;">
+<p align="center">
+  <img src="app/src/main/res/drawable/ic_ledgerly.png" alt="Ledgerly Logo" width="500" height="500">
+</p>
 
-  <img src="app/src/main/res/drawable/ic_ledgerly.png" alt="Ledgerly Logo" width="500" height="500"/>
+<h1 align="center">Ledgerly</h1>
 
-  <h1>Ledgerly</h1>
-
-<em>Know your money.</em>
-
-</div>
+<p align="center"><em>Know your money.</em></p>
