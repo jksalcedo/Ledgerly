@@ -15,7 +15,6 @@ This repository contains the Android app source for the SCO 306 — Project 2 as
 - Add and categorize transactions (income and expense)
 - Track budgets and financial goals
 - Local persistence using Room
-- Firebase integration placeholders / sync (requires configuration)
 - Basic analytics and simple reports
 
 
@@ -27,21 +26,3 @@ This repository contains the Android app source for the SCO 306 — Project 2 as
 - Room (local database)
 - Firebase (optional — for cloud sync/auth; not bundled)
 - Gradle
-
-
-## Quick setup
-
-Prerequisites:
-- Android Studio (Electric Eel / Flamingo / later recommended) or a compatible IDE
-- JDK 17+
-
-Steps:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Olooce/Ledgerly.git
-   cd Ledgerly
-   
-2. (Optional) Firebase:
-   - Firebase features (analytics, auth, firestore), create a Firebase project for development and download `google-services.json`.
-
-
